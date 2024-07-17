@@ -34,7 +34,7 @@ jobs:
              done < <(
              if [ -z ${{ env.GITHUB_CURRENT_COMMIT }} ]
              then
-              git ls-files -- '**${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}.json'
+              git ls-files -- '**.json'
              else
-              git diff --name-only ${{ env.GITHUB_PREVIOUS_COMMIT }} ${{ env.GITHUB_CURRENT_COMMIT }} -- '**${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}.json'
+              git diff --name-only ${{ env.GITHUB_PREVIOUS_COMMIT }} ${{ env.GITHUB_CURRENT_COMMIT }} -- '**.json'
              fi | awk NF)
