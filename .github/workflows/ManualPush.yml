@@ -14,8 +14,6 @@ jobs:
         VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
       - name: List all localization files in path "${{ vars.FOLDER_PATH }}"
