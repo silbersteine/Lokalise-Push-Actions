@@ -2,11 +2,6 @@ name: Push to Lokalise
 run-name: Push to Lokalise [${{ github.ref_name }}] ${{ github.event.after }}
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - ${{ vars.FOLDER_PATH }}/**.json
 jobs:
   build:
     runs-on: ubuntu-latest
