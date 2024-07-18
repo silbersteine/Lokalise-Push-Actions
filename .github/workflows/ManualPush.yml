@@ -1,5 +1,5 @@
 name: Push
-run-name: Push [${{ github.ref_name }}] ${{ github.event.after }}
+run-name: Push to Lokalise [${{ github.ref_name }}] ${{ github.event.after }}
 on:
   workflow_dispatch:
   push:
@@ -16,6 +16,10 @@ jobs:
           fetch-depth: 0
       - name: Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
+      - name: List all files
+        env: 
+          VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
+        run: git ls-files "${{ vars.FOLDER_PATH }}/**.json"
       - name: Push
         env:
           GITHUB_PREVIOUS_COMMIT: ${{ github.event.after }}
@@ -29,7 +33,7 @@ jobs:
              do 
                 if [ -f $file ]
                 then
-                  ./bin/lokalise2 --token ${{ env.VAR_LOKALISE_API_TOKEN }} --project-id ${{ env.VAR_LOKALISE_PROJECT_ID }} file upload --file="${file}" --lang-iso ${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }} --replace-modified --include-path --use-automations=true --cleanup-mode --poll-timeout 120s
+                  ./bin/lokalise2 --token ${{ env.VAR_LOKALISE_API_TOKEN }} --project-id ${{ env.VAR_LOKALISE_PROJECT_ID }} file upload --file=${file}" --lang-iso ${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }} --replace-modified --include-path --use-automations=true --cleanup-mode --poll-timeout 120s
                 fi
              done < <(
              if [ -z ${{ env.GITHUB_CURRENT_COMMIT }} ]
