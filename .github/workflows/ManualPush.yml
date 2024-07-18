@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "${ var.FOLDER_PATH }}/**.json"
+      - "${{ var.FOLDER_PATH }}/**.json"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,10 +33,4 @@ jobs:
                 then
                   ./bin/lokalise2 --token ${{ env.VAR_LOKALISE_API_TOKEN }} --project-id ${{ env.VAR_LOKALISE_PROJECT_ID }} file upload --file="${file}" --lang-iso ${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }} --replace-modified --include-path --use-automations=true --cleanup-mode --poll-timeout 120s
                 fi
-             done < <(
-             if [ -z ${{ env.GITHUB_CURRENT_COMMIT }} ]
-             then
-              git ls-files -- '**.json'
-             else
-              git diff --name-only ${{ env.GITHUB_PREVIOUS_COMMIT }} ${{ env.GITHUB_CURRENT_COMMIT }} -- '**.json'
-             fi | awk NF)
+             done
