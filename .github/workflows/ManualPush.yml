@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - ${{ var.FOLDER_PATH }}/**.json
+      - ${{ vars.FOLDER_PATH }}/**.json
 jobs:
   build:
     runs-on: ubuntu-latest
