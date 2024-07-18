@@ -14,10 +14,16 @@ jobs:
         VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
     steps:
       - uses: actions/checkout@v3
+      
+      # Download and install the Lokalise CLI tool
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
+
+      # List all JSON files in the specified folder path. These files will be pushed to Lokalise.  
       - name: List all localization files in path "${{ vars.FOLDER_PATH }}"
         run: git ls-files "${{ vars.FOLDER_PATH }}/**.json"
+
+      # Process each JSON file listed by `git ls-files` in folder path ${{ vars.FOLDER_PATH }} and upload to Lokalise  
       - name: Push localization files to Lokalise
         run: |
              while read file 
