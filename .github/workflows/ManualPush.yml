@@ -21,12 +21,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Lokalise CLI
+      - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
-      - name: List all files
+      - name: List all localization files in path "${{ vars.FOLDER_PATH }}"
         run: git ls-files "${{ vars.FOLDER_PATH }}/**.json"
-      - name: Push
-        
+      - name: Push localization files to Lokalise
         run: |
              while read file 
              do 
