@@ -32,8 +32,6 @@ jobs:
                           --export-sort a_z \
                           --filter-data translated \
                           --include-tags= ${{ github.ref_name }} \
-                          --placeholder-format raw \
-                          --plural-format
 
       - name: Commit
         env: 
