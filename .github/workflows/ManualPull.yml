@@ -31,9 +31,7 @@ jobs:
                           --directory-prefix="/" \
                           --export-sort a_z \
                           --filter-data translated \
-                          --include-tags= ${{ github.ref_name }} \
-                          --placeholder-format raw \
-                          --plural-format
+                          --include-tags= ${{ github.ref_name }}
 
       - name: Commit
         env: 
