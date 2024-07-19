@@ -34,7 +34,6 @@ jobs:
                   --replace-modified \
                   --include-path \
                   --use-automations=true \
-                  --cleanup-mode \
                   --distinguish-by-file \
                   --poll \
                   --poll-timeout=120s \
