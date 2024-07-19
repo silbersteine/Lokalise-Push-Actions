@@ -26,7 +26,6 @@ jobs:
                           --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
                           file download \
                           --format json \
-                          --filter-langs=de \
                           --original-filenames=true \
                           --directory-prefix="/" \
                           --export-sort a_z \
