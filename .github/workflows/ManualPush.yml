@@ -35,6 +35,8 @@ jobs:
                   --include-path \
                   --use-automations=true \
                   --cleanup-mode \
+                  --distinguish-by-file \
+                  --poll
                   --poll-timeout=120s                
                 fi
              done < <(git ls-files "${{ env.VAR_FOLDER_PATH }}/**.json")
