@@ -1,0 +1,50 @@
+name: Pull from Lokalise
+run-name: Pull from Lokalise [${{ github.ref_name }}] ${{ github.event.after }}
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PREVIOUS_COMMIT: ${{ github.event.after }}
+      GITHUB_CURRENT_COMMIT: ${{ github.event.before }}
+      VAR_LOKALISE_API_TOKEN: ${{ secrets.API_TOKEN }}
+      VAR_LOKALISE_PROJECT_ID: ${{ vars.PROJECT_ID }}
+      VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.SOURCE_LANG }}
+      VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Download and install the Lokalise CLI tool
+      - name: Install Lokalise CLI
+        run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
+
+      # Pull localization files from Lokalise
+      - name: Pull localization files from Lokalise
+        run: |
+          ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
+                          --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
+                          file download \
+                          --format json \
+                          --filter-langs=de \
+                          --original-filenames=true \
+                          --directory-prefix="/" \
+                          --export-sort a_z \
+                          --filter-data translated \
+                          --include-tags= ${{ github.ref_name }} \
+                          --placeholder-format raw \
+                          --plural-format
+
+      - name: Commit
+        env: 
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git add .
+          if [[ -z $(git status --untracked-files=no --porcelain) ]]; then
+            echo "No changes"
+          else
+            git commit -m 'Translations update'
+            git push origin main
+          fi
