@@ -39,7 +39,7 @@ jobs:
                   --poll \
                   --poll-timeout=120s \
                   --tag-inserted-keys \
-                  --tag-skipped-keys \
+                  --tag-skipped-keys ${{ github.ref_name }}  \
                   --tag-updated-keys \
                   --tags ${{ github.ref_name }} 
                 fi
