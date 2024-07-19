@@ -1,4 +1,4 @@
-# Lokalise-Push-Actions# GitHub Actions for Lokalise
+GitHub Actions for Lokalise: Manual upload and download files
 
 ## About
 
