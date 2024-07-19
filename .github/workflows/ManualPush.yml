@@ -37,6 +37,10 @@ jobs:
                   --cleanup-mode \
                   --distinguish-by-file \
                   --poll \
-                  --poll-timeout=120s                
+                  --poll-timeout=120s \
+                  --tag-inserted-keys \
+                  --tag-inserted-keys \
+                  --tag-updated-keys \
+                  --tags ${{ github.ref_name }} \
                 fi
              done < <(git ls-files "${{ env.VAR_FOLDER_PATH }}/**.json")
