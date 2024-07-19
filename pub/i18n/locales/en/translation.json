@@ -1,14 +1,13 @@
 {
-    "welcome": "Welcome",
+    "good_afternoon": "Good afternoon",
+    "good_morning": "Good morning",
+    "good_night": "Good night",
     "goodbye": "Goodbye",
-    "thank_you": "Thank you",
-    "yes": "Yes",
+    "hello": "Hello",
     "no": "No",
     "please": "Please",
     "sorry": "Sorry",
-    "hello": "Hello",
-    "good_morning": "Good morning",
-    "good_night": "Good night",
-    "good_afternoon": "Good afternoon"
-  }
-  
+    "thank_you": "Thank you",
+    "welcome": "Welcome",
+    "yes": "Yes"
+}
