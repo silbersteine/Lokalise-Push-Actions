@@ -67,12 +67,34 @@ jobs:
             
             echo "Git log after commit:"
             git log -1
-            
+
             echo "Pushing changes to remote repository"
             git push origin ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }}
           fi
 
-      # Create Pull Request
       - name: Create Pull Request
         run: |
-          gh pr create --base ${{ env.GITHUB_BASE_BRANCH_NAME }} --head ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }} --title "Lokalise translations update" --body ""
+            echo "Current directory: $(pwd)"
+            echo "Files in current directory:"
+            ls -al
+
+            echo "Git status before creating PR:"
+            git status
+
+            # Print details of uncommitted changes
+            echo "Uncommitted changes:"
+            git diff --name-only  # Show modified files not yet staged
+            git diff --cached --name-only  # Show staged files
+
+            # Ensure git configuration is correct
+            git config --global user.name "${GITHUB_ACTOR}"
+            git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+            # Create the pull request
+            echo "Creating Pull Request..."
+            gh pr create --base ${{ env.GITHUB_BASE_BRANCH_NAME }} \
+                        --head ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }} \
+                        --title "Lokalise translations update" \
+                        --body ""
+
+            echo "Pull Request created successfully."
