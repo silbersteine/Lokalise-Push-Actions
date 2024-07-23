@@ -69,7 +69,7 @@ jobs:
             git log -1
 
             echo "Pushing changes to remote repository"
-            git push origin "${{ github.ref_name }}-${{ github.sha }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}"
+            git push origin "${{ github.ref_name }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}"
           fi
 
       - name: Create Pull Request
