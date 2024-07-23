@@ -40,17 +40,39 @@ jobs:
                           --filter-data translated \
                           --include-tags=${{ github.ref_name }}
 
+      # Commit changes with debugging
       - name: Commit
         run: |
+          echo "Current directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -al
+
+          echo "Git status before adding files:"
+          git status
+
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          git add ./${{ vars.FOLDER_PATH }}/**/*.json -- ':!${{ vars.FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/*.json'
-          if [[ -z $(git status --untracked-files=no --porcelain) ]]; then
-            echo "No changes"
-          else
-            git commit -m 'Translations update'
-            git push origin ${{ env.GITHUB_NEW_BRANCH_NAME }}
 
+          echo "Adding files to staging area:"
+          git add ./${{ vars.FOLDER_PATH }}/**/*.json -- ':!${{ vars.FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/*.json'
+
+          echo "Git status after adding files:"
+          git status
+
+          if [[ -z $(git status --untracked-files=no --porcelain) ]]; then
+            echo "No changes to commit"
+          else
+            echo "Committing changes"
+            git commit -m 'Translations update'
+            
+            echo "Git log after commit:"
+            git log -1
+            
+            echo "Pushing changes to remote repository"
+            git push origin ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }}
+          fi
+
+      # Create Pull Request
       - name: Create Pull Request
         run: |
           gh pr create --base ${{ env.GITHUB_BASE_BRANCH_NAME }} --head ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }} --title "Lokalise translations update" --body ""
