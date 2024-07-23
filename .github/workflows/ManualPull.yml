@@ -69,7 +69,7 @@ jobs:
             git log -1
 
             echo "Pushing changes to remote repository"
-            git push origin ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }}
+            git push origin "${{ github.ref_name }}-${{ github.sha }}-${{ env.VAR_GITHUB_NEW_BRANCH_NAME }}"
           fi
 
       - name: Create Pull Request
@@ -93,7 +93,7 @@ jobs:
             # Create the pull request
             echo "Creating Pull Request..."
             gh pr create --base ${{ env.GITHUB_BASE_BRANCH_NAME }} \
-                        --head ${{ env.VAR_GITHUB_NEW_BRANCH_NAME }} \
+                        --head "${{ github.ref_name }}-${{ github.sha }}-${{ env.VAR_GITHUB_NEW_BRANCH_NAME }}" \
                         --title "Lokalise translations update" \
                         --body ""
 
