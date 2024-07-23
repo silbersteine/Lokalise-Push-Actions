@@ -1,13 +1,6 @@
 {
-    "good_afternoon": "Good afternoon",
-    "good_morning": "Good morning",
-    "good_night": "Good night",
-    "goodbye": "Goodbye",
-    "hello": "Hello",
-    "no": "No",
-    "please": "Please",
-    "sorry": "Sorry",
-    "thank_you": "Thank you",
-    "welcome": "Welcome",
-    "yes": "Yes"
+"feature-001": "feature one string",
+"feature-001b": "feature one string b",
+"feature-001c": "feature one string d",
+"feature-001d": "feature one string d"
 }
