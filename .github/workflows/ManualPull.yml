@@ -25,7 +25,7 @@ jobs:
       # Create a branch for the localization files
       - name: Create branch
         run: |
-          git checkout -b "${{ github.ref_name }}-${{ github.sha }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}"
+          git checkout -b "${{ github.ref_name }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}"
 
       # Pull localization files from Lokalise
       - name: Pull localization files from Lokalise
