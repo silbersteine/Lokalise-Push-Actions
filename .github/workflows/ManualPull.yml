@@ -37,7 +37,7 @@ jobs:
                           --directory-prefix="/" \
                           --export-sort a_z \
                           --filter-data translated \
-                          --include-tags=${{ env.GITHUB_BASE_BRANCH_NAME }}
+                          --include-tags=${{ github.ref_name }}
 
       - name: Commit
         env: 
