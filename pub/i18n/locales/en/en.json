@@ -1,13 +1,15 @@
 {
-    "good_afternoon": "Good afternoon",
-    "good_morning": "Good morning",
-    "good_night": "Good night",
+    "good_afternoon": "fa_000_3_updated Good afternoon",
+    "good_morning": "fa_000_3_updated Good morning",
+    "good_night": "fa_000_3_updated Good night",
     "goodbye": "Goodbye",
     "hello": "Hello",
-    "no": "No",
+    "no": "fa_000_3_updated No",
     "please": "Please",
     "sorry": "Sorry",
     "thank_you": "Thank you",
     "welcome": "Welcome",
-    "yes": "Yes"
+    "yes": "Yes",
+    "new": "fa_000_3_new en file",
+    "new_two": "fa_000_3_new en file"
 }
