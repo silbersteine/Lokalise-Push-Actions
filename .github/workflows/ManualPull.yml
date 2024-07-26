@@ -24,10 +24,10 @@ jobs:
       
       # Create a branch for the localization files
       - name: Create branch
-        run: | 
-          echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}" >> $GITHUB_ENV
-          echo "${{ env.VAR_LOCALIZATION_BRANCH }}"
-          git checkout -b "${{ env.VAR_LOCALIZATION_BRANCH}}"
+        run: echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}" >> $GITHUB_ENV
+
+      - name: Checkout branch
+        run: git checkout -b "${{ env.VAR_LOCALIZATION_BRANCH}}"
 
       # Pull localization files from Lokalise
       - name: Pull localization files from Lokalise
