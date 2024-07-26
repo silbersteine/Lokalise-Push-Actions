@@ -1,15 +1,13 @@
 {
-    "good_afternoon": "Buenas tardes",
-    "good_morning": "Buen día",
-    "good_night": "Buenas noches",
+    "good_afternoon": "fa_000_3_updated Buenas tardes",
+    "good_morning": "fa_000_3_updated Buenos días",
+    "good_night": "fa_000_3_updated Buenas noches",
     "goodbye": "Adiós",
     "hello": "Hola",
-    "no": "No",
+    "no": "fa_000_3_updated No",
     "please": "Por favor",
     "sorry": "Lo siento",
     "thank_you": "Gracias",
     "welcome": "Bienvenido",
-    "yes": "No",
-    "merge_request": "Change"
-    
+    "yes": "Sí"
 }
