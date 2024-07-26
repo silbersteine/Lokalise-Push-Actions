@@ -1,4 +1,5 @@
 {
+    "Lokalise": "Localizar",
     "good_afternoon": "Buenas tardes",
     "good_morning": "Buen día",
     "good_night": "Buenas noches",
@@ -9,7 +10,5 @@
     "sorry": "Lo siento",
     "thank_you": "Gracias",
     "welcome": "Bienvenido",
-    "yes": "No",
-    "merge_request": "Change"
-    
+    "yes": "Cambiar"
 }
