@@ -20,18 +20,12 @@ jobs:
 
       # Download and install the Lokalise CLI tool
       - name: Install Lokalise CLI
-        run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
-
-      #Create Localization Branch variable
-      - name: Create Localization Branch Variable
-        run:  echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}" >> $GITHUB_ENV
-      - name: Print concatenated variable
-        run: echo "${{ env.VAR_LOCALIZATION_BRANCH }}"
-        
+        run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh       
       
         # Create a branch for the localization files
       - name: Create branch
-        run: |
+        run: | 
+          echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}" >> $GITHUB_ENV
           git checkout -b "${{ env.VAR_LOCALIZATION_BRANCH}}"
 
       # Pull localization files from Lokalise
@@ -48,12 +42,8 @@ jobs:
                           --include-tags=${{ github.ref_name }}
 
       # Commit changes with debugging
-      - name: Commit
+      - name: Commit  to localization branch
         run: |
-          echo "Current directory: $(pwd)"
-          echo "Files in current directory:"
-          ls -al
-
           echo "Git status before adding files:"
           git status
 
@@ -81,10 +71,6 @@ jobs:
 
       - name: Create Pull Request
         run: |
-            echo "Current directory: $(pwd)"
-            echo "Files in current directory:"
-            ls -al
-
             echo "Git status before creating PR:"
             git status
 
