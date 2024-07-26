@@ -12,8 +12,9 @@ jobs:
       VAR_LOKALISE_PROJECT_ID: ${{ vars.PROJECT_ID }}
       VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.SOURCE_LANG }}
       VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
-      VAR_TRANSLATION_BRANCH_NAME: ${{ vars.TRANSLATION_BRANCH_NAME }}
+      VAR_LOCALIZATION_BRANCH_MARKER: ${{ vars.LOCALIZATION_BRANCH_MARKER }}
       GITHUB_BASE_BRANCH_NAME: ${{ github.ref_name }}
+      VAR_LOCALIZATION_BRANCH: ${{ format('{}_{}, vars.LOCALIZATION_BRANCH_MARKER, github.ref_name') }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +26,7 @@ jobs:
       # Create a branch for the localization files
       - name: Create branch
         run: |
-          git checkout -b "${{ github.ref_name }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}"
+          git checkout -b "${{ env.VAR_LOCALIZATION_BRANCH}}"
 
       # Pull localization files from Lokalise
       - name: Pull localization files from Lokalise
@@ -69,7 +70,7 @@ jobs:
             git log -1
 
             echo "Pushing changes to remote repository"
-            git push origin "${{ github.ref_name }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}"
+            git push origin "${{ env.VAR_LOCALIZATION_BRANCH }}"
           fi
 
       - name: Create Pull Request
@@ -93,7 +94,7 @@ jobs:
             # Create the pull request
             echo "Creating Pull Request..."
             gh pr create --base ${{ env.GITHUB_BASE_BRANCH_NAME }} \
-                        --head "${{ github.ref_name }}-${{ env.VAR_TRANSLATION_BRANCH_NAME }}" \
+                        --head "${{ env.VAR_LOCALIZATION_BRANCH }}" \
                         --title "Lokalise translations update" \
                         --body ""
 
