@@ -23,7 +23,13 @@ jobs:
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
 
-      # Create a branch for the localization files
+      #Create Localization Branch variable
+      - name: Create Localization Branch Variable
+        run: |
+          echo ::set-env name=VAR_LOCALIZATION_BRANCH::${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}
+          echo $VAR_LOCALIZATION_BRANCH
+      
+        # Create a branch for the localization files
       - name: Create branch
         run: |
           git checkout -b "${{ env.VAR_LOCALIZATION_BRANCH}}"
