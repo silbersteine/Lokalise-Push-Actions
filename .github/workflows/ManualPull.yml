@@ -25,8 +25,8 @@ jobs:
       #Create Localization Branch variable
       - name: Create Localization Branch Variable
         run: |
-          echo ::set-env name=VAR_LOCALIZATION_BRANCH::${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}
-          echo $VAR_LOCALIZATION_BRANCH
+          echo echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}" >> $GITHUB_ENV
+          echo ${{ env.VAR_LOCALIZATION_BRANCH}}
       
         # Create a branch for the localization files
       - name: Create branch
