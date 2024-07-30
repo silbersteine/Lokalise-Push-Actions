@@ -25,11 +25,13 @@ Please note that additional options are available with the Lokalise CLI. Review 
 
 ### Overview
 
-The `ManualPull.yml` action pulls localization files from Lokalise and commits them to your branch in GitHub. This action fetches the latest translations from Lokalise, ensuring your project always has the most recent localization updates.
+The `ManualPull.yml` action opens a pull request that includes updated target language files on the branch that triggered the action. This action fetches the latest translations from Lokalise, ensuring your project always has the most recent localization updates.
 
 ### Usage
 
-To use `ManualPull.yml`, make sure you have configured the required environment variables and secrets. Trigger the action manually to pull the latest localization files into your repository. Only files and keys tagged with your repository's branch name will be included in the pull. To avoid missing any keys or files, start your tryanslation workflow by pushing from your branch to ensure that all translation keys in your branch are tagged in Lokalise with your branch's name. This step is crucial for including all relevant translations during the download.
+To use `ManualPull.yml`, make sure you have configured the required environment variables and secrets. Trigger the action manually to open a pull request on your branch. Only files and keys tagged with your repository's branch name will be included in the pull. To avoid missing any keys or files, start your translation workflow by pushing from your branch to ensure that all translation keys in your branch are tagged in Lokalise with your branch's name. This step is crucial for including all relevant translations during the download.
+
+All the localization branches for pull requests will have the l10n prefix (configurable in your GitHub action variables), and include the first 6 of the ref SHA as the suffix for the branch. EX: l10n_feauture1_123456. If you trigger a the automation twice from the same reference branch and head SHA, the action will auto-close. 
 
 ### Current Parameters and Options
 
@@ -39,11 +41,6 @@ Remember that additional options are available with the Lokalise CLI. For furthe
 
 ## Setup Instructions
 
-1. **Add Secrets and Variables**: Ensure the necessary secrets (`API_TOKEN`) and variables (`PROJECT_ID`, `SOURCE_LANG`, `FOLDER_PATH`) are set in your repository settings.
+1. **Add Secrets and Variables**: Ensure the necessary secrets (`API_TOKEN`) and variables (`PROJECT_ID`, `SOURCE_LANG`, `FOLDER_PATH`, `LOCALIZATION_BRANCH_MARKER`) are set in your repository settings.
 2. **Manual Trigger**: Both actions are manually triggered using `workflow_dispatch`, allowing you to pull from or push to Lokalise whenever needed.
 3. **Important Note**: The folder path specified in the actions may differ from your project's folder structure. Pay close attention to your folder structure and adjust the path in line 42 of the `ManualPull.yml` commit step to match your specific setup. This ensures that files are correctly located and processed according to your repository's organization. The current setup is designed to omit the committing of source language resource files. Remember that Lokalise will substitute hardcoded language ISO codes found in your filenames and folder structure with the %LANG_ISO% placeholder, allowing for dynamic switching of ISO codes for your target languages during download.
-
-
-## Contributing
-
-Feel free to contribute by opening issues or submitting pull requests. Ensure your code follows the repository's coding standards and includes relevant tests.
