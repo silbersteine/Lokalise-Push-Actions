@@ -18,16 +18,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Download and install the Lokalise CLI tool
-      - name: Install Lokalise CLI
-        run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh       
-      
       # Create a branch for the localization files
-      - name: Create branch
+      - name: Create branch name
         run: |
           SHORT_SHA=${GITHUB_SHA::6}  
           echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}_$SHORT_SHA" >> $GITHUB_ENV
 
+      # Check if branch already exists
+      - name: Check if branch exists
+        run: |
+          if git ls-remote --heads origin "${{ env.VAR_LOCALIZATION_BRANCH }}" | grep "${{ env.VAR_LOCALIZATION_BRANCH }}"; then
+            echo "Branch ${VAR_LOCALIZATION_BRANCH} already exists. Stopping the action."
+            exit 1
+          else
+            echo "Branch ${VAR_LOCALIZATION_BRANCH} does not exist. Proceeding with the workflow."
+          fi
+
+      # Download and install the Lokalise CLI tool
+      - name: Install Lokalise CLI
+        run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh       
+            
+      # Create and checkout brancg
       - name: Checkout branch
         run: git checkout -b "${{ env.VAR_LOCALIZATION_BRANCH}}"
 
