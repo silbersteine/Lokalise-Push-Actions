@@ -2,7 +2,7 @@ GitHub Actions for Lokalise: Manual upload and download files
 
 ## About
 
-This repository contains two GitHub Actions, `ManualPull.yml` and `ManualPush.yml`, designed to streamline the process of managing localization files with Lokalise. The actions allow for manual triggering of pulling and pushing translation files between your GitHub repository and Lokalise, ensuring your localization data is always up-to-date.
+This repository contains two GitHub Actions, `ManualPull.yml` and `ManualPush.yml`, designed to streamline the process of managing localization files with Lokalise. The actions allow for manual triggering of pulling and pushing translation files between your GitHub repository and Lokalise, ensuring your localization data is always up-to-date. The manual aspect can be changed to be triggered by a schedule, or by a triggering event. 
 
 ## ManualPush.yml
 
