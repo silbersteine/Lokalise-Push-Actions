@@ -1,0 +1,19 @@
+name: Get list of changed files
+run_name: List Changed files
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # this is required to get the full history
+
+      - name: Get all changed files
+        id: changed_files
+        run: |
+            changed_files=$(git diff --name-only main...${{ github.ref_name }}) 
+            echo "files=${changed_files}" >> $GITHUB_ENV 
+            echo "Changed files: ${{ env.files }}
