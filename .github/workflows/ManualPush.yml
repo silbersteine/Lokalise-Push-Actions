@@ -22,7 +22,7 @@ jobs:
       # Identify and process each changed JSON file within the specified folder path and upload to Lokalise  
       - name: Push localization files to Lokalise
         run: |
-            changed_files=$(git diff --name-only $GITHUB_PREVIOUS_COMMIT $GITHUB_CURRENT_COMMIT -- ${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/ )
+            changed_files=$(git diff --name-only $GITHUB_PREVIOUS_COMMIT $GITHUB_CURRENT_COMMIT -- ${{ env.VAR_FOLDER_PATH }}${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/ )
             for file in $changed_files
             do 
               if [[ $file == *.json ]]
