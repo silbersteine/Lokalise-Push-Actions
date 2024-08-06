@@ -15,31 +15,35 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      # Get list of changed files
+      - name: Get list of changed files
+        id: changed_files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only main...${{ github.ref_name }} -- ${{ env.VAR_FOLDER_PATH }}${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json)"
+
       # Download and install the Lokalise CLI tool
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
 
-      # Process each JSON file listed by `git ls-files` in folder path ${{ vars.FOLDER_PATH }} and upload to Lokalise  
+      # Process each JSON file listed by previous step and upload to Lokalise  
       - name: Push localization files to Lokalise
         run: |
-             while read file 
-             do 
-                if [ -f $file ]
-                then
-                ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
-                  --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
-                  file upload \
-                  --file="$file" \
-                  --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
-                  --replace-modified \
-                  --include-path \
-                  --use-automations=true \
-                  --distinguish-by-file \
-                  --poll \
-                  --poll-timeout=120s \
-                  --tag-inserted-keys \
-                  --tag-skipped-keys=true \
-                  --tag-updated-keys \
-                  --tags ${{ github.ref_name }} 
-                fi
-             done < <(git ls-files "${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json")
+          for file in ${{ steps.changed_files.outputs.files }}; do
+            if [ -f $file ]
+            then
+              ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
+                --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
+                file upload \
+                --file="$file" \
+                --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
+                --replace-modified \
+                --include-path \
+                --use-automations=true \
+                --distinguish-by-file \
+                --poll \
+                --poll-timeout=120s \
+                --tag-inserted-keys \
+                --tag-skipped-keys=true \
+                --tag-updated-keys \
+                --tags ${{ github.ref_name }}
+            fi
