@@ -15,11 +15,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Get list of changed files
-      - name: Get list of changed files
+      - name: List branches
+        run: git branch -r
+
+      - name: Get all changed files
         id: changed_files
         run: |
-          echo "files=$(git diff --name-only main...${{ github.ref_name }} -- ${{ env.VAR_FOLDER_PATH }}${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json)" >> $GITHUB_ENV
+            git fetch origin main:${{ github.ref_name }}-main
+            git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current
+            git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current
+            
+      - name: Print the changed files
+        run: |
+            changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- 'pub/i18n/locales/en/**.json')
+            echo "Changed files:"
+            echo "$changed_files"
 
       # Download and install the Lokalise CLI tool
       - name: Install Lokalise CLI
