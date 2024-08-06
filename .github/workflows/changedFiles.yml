@@ -29,7 +29,8 @@ jobs:
       - name: Get list of changed JSON files
         id: files
         run: |
-          echo "CHANGED_FILES=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- 'pub/i18n/locales/en/**.json')" >> $GITHUB_ENV
+          changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- 'pub/i18n/locales/en/**.json')
+          echo "CHANGED_FILES=$changed_files" >> $GITHUB_ENV
 
       - name: Use Changed Files
         run: |
