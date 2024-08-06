@@ -19,12 +19,13 @@ jobs:
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
 
-      # Process each JSON file listed by `git ls-files` in folder path ${{ vars.FOLDER_PATH }} and upload to Lokalise  
-      - name: Push localization files to Lokalise
-        run: |
-             while read file 
-             do 
-                if [ -f $file ]
+       # Identify and process each changed JSON file within the specified folder path and upload to Lokalise  
+       - name: Push localization files to Lokalise
+       run: |
+            changed_files=$(git diff --name-only $GITHUB_PREVIOUS_COMMIT $GITHUB_CURRENT_COMMIT -- $VAR_FOLDER_PATH/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/)
+            for file in $changed_files
+            do 
+               if [[ $file == *.json ]]
                 then
                 ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
                   --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
