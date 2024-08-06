@@ -1,5 +1,5 @@
 name: Get list of changed files
-run_name: List Changed files
+run-name: List Changed files
 on:
   workflow_dispatch:
 jobs:
