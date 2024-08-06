@@ -17,12 +17,11 @@ jobs:
       - name: Get all changed files
         id: changed_files
         run: |
-            git fetch origin main:updatePush-main
-            git fetch origin ${{ github.ref_name }}:updatePush-current
-            git diff --name-only updatePush-main...updatePush-current
+            git fetch origin main:${{ github.ref_name }}-main
+            git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current
+            git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current
       - name: Print the changed files
         run: |
-            changed_files=$(git diff --name-only updatePush-main...updatePush-current)
+            changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- 'pub/i18n/locales/en/**/*.json')
             echo "Changed files:"
             echo "$changed_files"
-            echo "files=${changed_files}"
