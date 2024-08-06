@@ -47,3 +47,4 @@ jobs:
                 --tag-updated-keys \
                 --tags ${{ github.ref_name }}
             fi
+          done
