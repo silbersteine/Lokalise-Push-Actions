@@ -11,9 +11,18 @@ jobs:
         with:
           fetch-depth: 0  # this is required to get the full history
 
+      - name: List branches
+        run: git branch -r
+
       - name: Get all changed files
         id: changed_files
         run: |
-            changed_files=$(git diff --name-only main...${{ github.ref_name }}) 
+            git fetch origin main:updatePush-main
+            git fetch origin ${{ github.ref_name }}:updatePush-current
+            git diff --name-only updatePush-main...updatePush-current
+      - name: Print the changed files
+        run: |
+            changed_files=$(git diff --name-only updatePush-main...updatePush-current)
+            echo "Changed files:"
+            echo "$changed_files"
             echo "files=${changed_files}" >> $GITHUB_ENV 
-            echo "Changed files: ${{ env.files }}
