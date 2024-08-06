@@ -25,4 +25,4 @@ jobs:
             changed_files=$(git diff --name-only updatePush-main...updatePush-current)
             echo "Changed files:"
             echo "$changed_files"
-            echo "files=${changed_files}" >> $GITHUB_ENV 
+            echo "files=${changed_files}"
