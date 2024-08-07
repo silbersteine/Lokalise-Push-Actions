@@ -13,46 +13,47 @@ jobs:
       VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.SOURCE_LANG }}
       VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
     steps:
+      # Checkout the repository to the GitHub runner
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # this is required to get the full history
+          fetch-depth: 0  # Fetch the full history of the repository to ensure all commits are available
 
       # Download and install the Lokalise CLI tool
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
 
-      - name: List branches
-        run: git branch -r
-
+      # Fetch the list of all changed files between two branches
       - name: Get all changed files
-        id: changed_files
         run: |
-            git fetch origin main:${{ github.ref_name }}-main
-            git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current
-            git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current
-      
+            git fetch origin main:${{ github.ref_name }}-main  # Fetch the main branch
+            git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current  # Fetch the current branch
+            git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current  # List all changed files
+
+      # Push the localization files to Lokalise
       - name: Push localization files to Lokalise
         run: |
+            # Get the list of changed JSON files within the specified folder path and language
             changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- '${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json')
             echo "Changed files:"
             echo "$changed_files"
-              for file in $changed_files; do
-                if [ -f "$file" ]; then
-                  ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
-                  --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
-                  file upload \
-                  --file="$file" \
-                  --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
-                  --replace-modified \
-                  --include-path \
-                  --use-automations=true \
-                  --distinguish-by-file \
-                  --poll \
-                  --poll-timeout=120s \
-                  --tag-inserted-keys \
-                  --tag-skipped-keys=true \
-                  --tag-updated-keys \
-                  --tags ${{ github.ref_name }}
-                fi
-              done
+            # Loop through each changed file and upload it to Lokalise
+            for file in $changed_files; do
+              if [ -f "$file" ]; then
+                ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
+                --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
+                file upload \
+                --file="$file" \
+                --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
+                --replace-modified \
+                --include-path \
+                --use-automations=true \
+                --distinguish-by-file \
+                --poll \
+                --poll-timeout=120s \
+                --tag-inserted-keys \
+                --tag-skipped-keys=true \
+                --tag-updated-keys \
+                --tags ${{ github.ref_name }}
+              fi
+            done
