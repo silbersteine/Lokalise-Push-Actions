@@ -1,45 +1,60 @@
 name: Push to Lokalise
-run-name: Push to Lokalise [${{ github.ref_name }}] ${{ github.event.after }}
+run-name: Push to Lokalise
 on:
   workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-        GITHUB_PREVIOUS_COMMIT: ${{ github.event.after }}
-        GITHUB_CURRENT_COMMIT: ${{ github.event.before }}
-        VAR_LOKALISE_API_TOKEN: ${{ secrets.API_TOKEN }}
-        VAR_LOKALISE_PROJECT_ID: ${{ vars.PROJECT_ID }}
-        VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.SOURCE_LANG }}
-        VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
+      GITHUB_PREVIOUS_COMMIT: ${{ github.event.after }}
+      GITHUB_CURRENT_COMMIT: ${{ github.event.before }}
+      VAR_LOKALISE_API_TOKEN: ${{ secrets.API_TOKEN }}
+      VAR_LOKALISE_PROJECT_ID: ${{ vars.PROJECT_ID }}
+      VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.SOURCE_LANG }}
+      VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
     steps:
-      - uses: actions/checkout@v3
-      
+      # Checkout the repository to the GitHub runner
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the full history of the repository to ensure all commits are available
+
       # Download and install the Lokalise CLI tool
       - name: Install Lokalise CLI
         run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
 
-      # Process each JSON file listed by `git ls-files` in folder path ${{ vars.FOLDER_PATH }} and upload to Lokalise  
+      # Fetch the list of all changed files between two branches
+      - name: Get all changed files
+        run: |
+            git fetch origin main:${{ github.ref_name }}-main  # Fetch the main branch
+            git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current  # Fetch the current branch
+            git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current  # List all changed files
+      
+      # Fetch the latest state of main and trigger branch from remote and save them locally as new branches to ensure the most up-to-date versions are used in step.
+      # Compare the changes between these two locally saved branches and list the names of files that have changed.
+      # Push the listed localization files to Lokalise
       - name: Push localization files to Lokalise
         run: |
-             while read file 
-             do 
-                if [ -f $file ]
-                then
+            changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- '${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json')
+            echo "Changed files:"
+            echo "$changed_files"
+            # Loop through each changed file and upload it to Lokalise
+            for file in $changed_files; do
+              if [ -f "$file" ]; then
                 ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
-                  --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
-                  file upload \
-                  --file="$file" \
-                  --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
-                  --replace-modified \
-                  --include-path \
-                  --use-automations=true \
-                  --distinguish-by-file \
-                  --poll \
-                  --poll-timeout=120s \
-                  --tag-inserted-keys \
-                  --tag-skipped-keys=true \
-                  --tag-updated-keys \
-                  --tags ${{ github.ref_name }} 
-                fi
-             done < <(git ls-files "${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json")
+                --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
+                file upload \
+                --file="$file" \
+                --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
+                --replace-modified \
+                --include-path \
+                --use-automations=true \
+                --distinguish-by-file \
+                --poll \
+                --poll-timeout=120s \
+                --tag-inserted-keys \
+                --tag-skipped-keys=true \
+                --tag-updated-keys \
+                --tags ${{ github.ref_name }}
+              fi
+            done
