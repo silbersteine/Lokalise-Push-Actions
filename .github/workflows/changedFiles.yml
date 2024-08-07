@@ -11,6 +11,10 @@ jobs:
         with:
           fetch-depth: 0  # this is required to get the full history
 
+      # Download and install the Lokalise CLI tool
+      - name: Install Lokalise CLI
+        run: curl -sfL https://raw.githubusercontent.com/lokalise/lokalise-cli-2-go/master/install.sh | sh
+
       - name: List branches
         run: git branch -r
 
@@ -20,21 +24,33 @@ jobs:
             git fetch origin main:${{ github.ref_name }}-main
             git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current
             git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current
+      
       - name: Print the changed files
         run: |
             changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- 'pub/i18n/locales/en/**.json')
             echo "Changed files:"
             echo "$changed_files"
-
-      - name: Get list of changed JSON files
-        id: files
+            echo "::set-output name=files::$changed_files"
+            
+      - name: Push localization files to Lokalise
         run: |
-          changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- 'pub/i18n/locales/en/**.json')
-          echo "CHANGED_FILES=$changed_files" >> $GITHUB_ENV
-
-      - name: Use Changed Files
-        run: |
-          echo "Changed Files:"
-          echo $CHANGED_FILES
-
-    
+            for file in ${{ steps.changed_files.outputs.files }}; do
+              if [ -f "$file" ]
+              then
+                ./bin/lokalise2 --token="${{ env.VAR_LOKALISE_API_TOKEN }}" \
+                --project-id="${{ env.VAR_LOKALISE_PROJECT_ID }}" \
+                file upload \
+                --file="$file" \
+                --lang-iso="${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}" \
+                --replace-modified \
+                --include-path \
+                --use-automations=true \
+                --distinguish-by-file \
+                --poll \
+                --poll-timeout=120s \
+                --tag-inserted-keys \
+                --tag-skipped-keys=true \
+                --tag-updated-keys \
+                --tags ${{ github.ref_name }}
+              fi
+            done
