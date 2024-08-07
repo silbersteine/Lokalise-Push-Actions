@@ -8,7 +8,7 @@ This repository contains two GitHub Actions, `ManualPull.yml` and `ManualPush.ym
 
 ### Overview
 
-The `ManualPush.yml` action pushes your source lnguage localization files from your GitHub repository to Lokalise. It can be triggered from any branch in your repository and tags the keys in Lokalise with the branch name. In its current configuration, it will only push files that appear in the diff between the triggering branch and 'main'. 
+The `ManualPush.yml` action pushes your source language localization files from your GitHub repository to Lokalise. It can be triggered from any branch in your repository and tags the keys in Lokalise with the branch name. If triggered from main, the action will compare changes in language resource files between HEAD~1 and HEAD and push changed files. If triggered from a branch other than main, it will only push files that appear in the diff between the triggering branch and 'main'. 
 
 ### Usage
 
