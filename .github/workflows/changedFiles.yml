@@ -34,7 +34,7 @@ jobs:
       
       - name: Push localization files to Lokalise
         run: |
-            changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- ${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json')
+            changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- '${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json')
             echo "Changed files:"
             echo "$changed_files"
               for file in $changed_files; do
