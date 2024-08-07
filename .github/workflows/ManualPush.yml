@@ -30,7 +30,7 @@ jobs:
             git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current  # Fetch the current branch
             git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current  # List all changed files
       
-      # Determine if the current branch is main if on main, only compare changes within main itself. 
+      # Determine if the current branch is main if on main, only compare changes within main itself between last two commits. 
       # If workflow is triggered from a branch, fetch the latest state of main and trigger branch from remote and save them locally as new banches to ensure the most up-to-date versions are used in step.
       # Compare the changes between these two locally saved branches and list the names of files that have changed.
       # Push the listed localization files to Lokalise
