@@ -2,13 +2,13 @@ GitHub Actions for Lokalise: Manual upload and download files
 
 ## About
 
-This repository contains two GitHub Actions, `ManualPull.yml` and `ManualPush.yml`, designed to streamline the process of managing localization files with Lokalise. The actions allow for manual triggering of pulling and pushing translation files between your GitHub repository and Lokalise, ensuring your localization data is always up-to-date. The manual aspect can be changed to be triggered by a schedule, or by a triggering event. 
+This repository contains two GitHub Actions, `ManualPull.yml` and `ManualPush.yml`, designed to streamline the process of managing localization files with Lokalise. The actions, in their current state, allow for manual triggering of pulling and pushing translation files between your GitHub repository and Lokalise, ensuring your localization data is always up-to-date. These are your actions to make your own for automated pushing and pulling for your custom workflwos.
 
 ## ManualPush.yml
 
 ### Overview
 
-The `ManualPush.yml` action pushes your source lnguage localization files from your GitHub repository to Lokalise. This action can be manually triggered to upload the latest translations from your project to Lokalise, ensuring your translation management is always current. It can be triggered from any branch in your repository and tags the keys in Lokalise with the branch name.
+The `ManualPush.yml` action pushes your source lnguage localization files from your GitHub repository to Lokalise. It can be triggered from any branch in your repository and tags the keys in Lokalise with the branch name. In its current configuration, it will only push files that appear in the diff between the triggering branch and 'main'. 
 
 ### Usage
 
@@ -29,7 +29,7 @@ The `ManualPull.yml` action opens a pull request that includes updated target la
 
 ### Usage
 
-To use `ManualPull.yml`, make sure you have configured the required environment variables and secrets. Trigger the action manually to open a pull request on your branch. Only files and keys tagged with your repository's branch name will be included in the pull. To avoid missing any keys or files, start your translation workflow by pushing from your branch to ensure that all translation keys in your branch are tagged in Lokalise with your branch's name. This step is crucial for including all relevant translations during the download.
+To use `ManualPull.yml`, make sure you have configured the required environment variables and secrets. Trigger the action manually to open a pull request on your branch. Only files and keys tagged with your repository's branch name will be included in the pull. To avoid missing any keys or files, you must first apply tags to keys by using the Push action from your branch where your are localizing. This step is crucial for including all relevant translations during the download.
 
 All the localization branches for pull requests will have the l10n prefix (configurable in your GitHub action variables), and include the first 6 of the ref SHA as the suffix for the branch. EX: l10n_feauture1_123456. If you trigger a the automation twice from the same reference branch and head SHA, the action will auto-close. 
 
