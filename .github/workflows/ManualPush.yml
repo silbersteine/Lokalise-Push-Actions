@@ -30,12 +30,19 @@ jobs:
             git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}-current  # Fetch the current branch
             git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current  # List all changed files
       
-      # Fetch the latest state of main and trigger branch from remote and save them locally as new branches to ensure the most up-to-date versions are used in step.
+      # Determine if the current branch is main if on main, only compare changes within main itself. 
+      # If workflow is triggered from a branch, fetch the latest state of main and trigger branch from remote and save them locally as new banches to ensure the most up-to-date versions are used in step.
       # Compare the changes between these two locally saved branches and list the names of files that have changed.
       # Push the listed localization files to Lokalise
       - name: Push localization files to Lokalise
         run: |
-            changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- '${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json')
+
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              changed_files=$(git diff --name-only HEAD~1 HEAD -- '${{ vars.FOLDER_PATH }}/${{ vars.SOURCE_LANG }}/**.json')
+            else 
+              changed_files=$(git diff --name-only ${{ github.ref_name }}-main...${{ github.ref_name }}-current -- '${{ env.VAR_FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/**.json')
+            fi 
+
             echo "Changed files:"
             echo "$changed_files"
             # Loop through each changed file and upload it to Lokalise
