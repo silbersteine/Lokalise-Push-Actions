@@ -8,11 +8,11 @@ jobs:
     env:
       GITHUB_PREVIOUS_COMMIT: ${{ github.event.after }}
       GITHUB_CURRENT_COMMIT: ${{ github.event.before }}
-      VAR_LOKALISE_API_TOKEN: ${{ secrets.API_TOKEN }}
-      VAR_LOKALISE_PROJECT_ID: ${{ vars.PROJECT_ID }}
-      VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.SOURCE_LANG }}
-      VAR_FOLDER_PATH: ${{ vars.FOLDER_PATH }}
-      VAR_LOCALIZATION_BRANCH_MARKER: ${{ vars.LOCALIZATION_BRANCH_MARKER }}
+      VAR_LOKALISE_API_TOKEN: ${{ secrets.LOKALISE_API_TOKEN }}
+      VAR_LOKALISE_PROJECT_ID: ${{ vars.LOKALISE_PROJECT_ID }}
+      VAR_LOKALISE_SOURCE_LANG_ISO: ${{ vars.LOKALISE_SOURCE_LANG }}
+      VAR_LOKALISE_TRANSLATIONS_PATH: ${{ vars.LOKALISE_TRANSLATIONS_PATH }}
+      VAR_LOKALISE_BRANCH_MARKER: ${{ vars.LOKALISE_BRANCH_MARKER }}
       GITHUB_BASE_BRANCH_NAME: ${{ github.ref_name }}
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -22,7 +22,7 @@ jobs:
       - name: Create branch name
         run: |
           SHORT_SHA=${GITHUB_SHA::6}  
-          echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOCALIZATION_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}_$SHORT_SHA" >> $GITHUB_ENV
+          echo "VAR_LOCALIZATION_BRANCH=${{ env.VAR_LOKALISE_BRANCH_MARKER }}_${{ env.GITHUB_BASE_BRANCH_NAME }}_$SHORT_SHA" >> $GITHUB_ENV
 
       # Check if branch already exists
       - name: Check if branch exists
@@ -65,7 +65,7 @@ jobs:
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
           echo "Adding files to staging area:"
-          git add ./${{ vars.FOLDER_PATH }}/**/*.json -- ':!${{ vars.FOLDER_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/*.json'
+          git add ./${{ vars.LOKALISE_TRANSLATION_PATH }}/**/*.json -- ':!${{ vars.LOKALISE_TRANSLATION_PATH }}/${{ env.VAR_LOKALISE_SOURCE_LANG_ISO }}/*.json'
 
           echo "Git status after adding files:"
           git status
